@@ -89,14 +89,13 @@ io.on('connection', function(socket){
             }
             current_players.push(4)
         }
-
         numOfPlayers += 1;
         clients.push(currentPlayer);
         socket.emit('play', currentPlayer);
         socket.broadcast.emit('other_player_connected', currentPlayer);
-        console.log("number of players: ",numOfPlayers)
     })
-//can improve by not sending full currentPlayer object, but just rotate/move
+    
+    //can later improve by not sending full currentPlayer object, but rather just currentPlayer's position/rotation
     socket.on('player_move', function(data){
         currentPlayer.position = data.position;
         socket.broadcast.emit('player_move', currentPlayer);
@@ -160,7 +159,6 @@ io.on('connection', function(socket){
             temp_arr.push(String(data['name']))
             for(var i =0; i<temp_arr.length; i++){
                 if(!tile_arr[current_tile].includes(temp_arr[i])){
-                    // console.log(`${temp_arr[i]} is not included, resetting`)
                     io.emit("reset_tiles")
                     tiles_sent = 0
                     current_tile = 0
@@ -179,15 +177,19 @@ io.on('connection', function(socket){
         }
     })
 
+    //User Video Broadcasts
     socket.on("send_video_one", function(data){
         socket.broadcast.emit("update_video_one", data)
     })
+    
     socket.on("send_video_two", function(data){
         socket.broadcast.emit("update_video_two", data)
     })
+    
     socket.on("send_video_three", function(data){
         socket.broadcast.emit("update_video_three", data)
     })
+    
     socket.on("send_video_four", function(data){
         socket.broadcast.emit("update_video_four", data)
     })
@@ -212,7 +214,6 @@ io.on('connection', function(socket){
             numOfPlayers = 0
             bulb_pressed = 1
         }
-        console.log("number of players: ",numOfPlayers)
     })
 })
 
